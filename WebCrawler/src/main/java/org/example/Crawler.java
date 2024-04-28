@@ -11,7 +11,7 @@ import java.util.*;
 public class Crawler {
     private String url, domain;
     private int depth;
-    private Set<String> visited = new HashSet<>();
+    private Set<String> visitedUrls = new HashSet<>();
 
     public Crawler(String url, int depth, String domain) {
         this.url = url;
@@ -20,15 +20,15 @@ public class Crawler {
     }
 
     public void startCrawling() throws IOException {
-        crawl(0, this.url, ">");
+        crawl(0, this.url, "->");
         System.out.println("Crawling completed.");
     }
 
     private void crawl(int depth, String url, String indent) {
-        if (depth > this.depth || visited.contains(url) || !url.contains(this.domain)) {
+        if (depth > this.depth || visitedUrls.contains(url) || !url.contains(this.domain)) {
             return;
         }
-        visited.add(url);
+        visitedUrls.add(url);
 
         Document document;
         try {
@@ -41,15 +41,7 @@ public class Crawler {
         System.out.println(indent + "URL: " + url);
 
         crawlHeadings(document, "h1", indent);
-
-        Elements links = document.select("a[href]");
-        //crawlLinks(links, indent);
-        for (Element link : links) {
-            String nextUrl = link.absUrl("href");
-            if (!nextUrl.isEmpty()) {
-                crawl(depth + 1, nextUrl, "--" + indent);
-            }
-        }
+        crawlFurtherLinks(document, indent, depth);
     }
 
     public static void crawlHeadings(Document document, String tag, String indent) {
@@ -60,14 +52,13 @@ public class Crawler {
         Elements headings = document.select(tag);
         for (Element heading : headings) {
             System.out.println(newIndent + heading.tagName() + ": " + heading.text());
-
             String nextTag = "h" + (Integer.parseInt(tag.substring(1)) + 1);
-
             crawlHeadings(document, nextTag, newIndent);
         }
     }
 
-    private void crawlLinks(Elements links, String indent) {
+    private void crawlFurtherLinks(Document document, String indent, int depth) {
+        Elements links = document.select("a[href]");
         for (Element link : links) {
             String nextUrl = link.absUrl("href");
             if (!nextUrl.isEmpty()) {
