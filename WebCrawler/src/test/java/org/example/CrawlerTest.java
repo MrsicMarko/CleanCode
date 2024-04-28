@@ -3,54 +3,71 @@ package org.example;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
+
+import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CrawlerTest {
+
     String url = "http://projects.htl-klu.at/Projekt_2324/";
     String domain = "";
-    Crawler validCrawler;
+    ByteArrayOutputStream outContent;
+    PrintStream originalOut;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @BeforeEach
     public void setUp() {
-        validCrawler = new Crawler(url, 2, domain);
+        outContent = new ByteArrayOutputStream();
+        originalOut = System.out;
+        System.setOut(new PrintStream(outContent));
+
     }
 
     @AfterEach
     public void tearDown() {
-        validCrawler = null;
+        System.setOut(originalOut);
     }
 
     @Test
     void testUserInputInvalidURL() {
-        Crawler invalidCrawler = new Crawler("fixAFalscheURL", 1, "");
-        assertThrows(IllegalArgumentException.class, () -> invalidCrawler.startCrawling());
+        assertFalse(Main.isValidURL("FixKaValideURL"));
+    }
+
+    @Test
+    void testUserInputValidURL() {
+        assertTrue(Main.isValidURL(url));
     }
 
     @Test
     void testUserInputInvalidDepth() {
-        //Crawler invalidCrawler = new Crawler(url, "d", "");
-        //assertThrows(IllegalArgumentException.class, () -> invalidCrawler.startCrawling());
+        thrown.expect(NumberFormatException.class);
+        Main.processDepthInput("depth");
     }
 
     @Test
-    void testStartCrawling() {
+    void testUserInputValidDepth() {
+        int expectedDepth = 3;
+        int actualDepth = Main.processDepthInput("3");
+        assertEquals(expectedDepth, actualDepth);
     }
 
     @Test
-    void testCrawlHeadings() {
+    void testSuccessfulCrawling() throws IOException {
+        Main.crawlWithUserInput(url, 0, domain);
+        String printedContent = outContent.toString();
+        assertTrue(printedContent.contains("Crawling completed."));
     }
 
     @Test
-    void testCrawlFurtherLinks() {
-    }
-
-    @Test
-    void testCrawl() {
-    }
-
-    @Test
-    void testCrawlBadLink() {
+    void testCrawlWithInvalidURL() {
+        Main.crawlWithUserInput("a", 0, domain);
+        String printedContent = outContent.toString();
+        assertTrue(printedContent.contains("Invalid URL."));
     }
 }

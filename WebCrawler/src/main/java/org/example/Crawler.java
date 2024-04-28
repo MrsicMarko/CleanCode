@@ -19,7 +19,7 @@ public class Crawler {
         this.domain = domain;
     }
 
-    public void startCrawling() throws IOException {
+    public void startCrawling() {
         crawl(0, this.url, "->");
         System.out.println("Crawling completed.");
     }
@@ -44,7 +44,7 @@ public class Crawler {
         crawlFurtherLinks(document, indent, depth);
     }
 
-    public static void crawlHeadings(Document document, String tag, String indent) {
+    private void crawlHeadings(Document document, String tag, String indent) {
         if (tag.equals("h7")) {
             return;
         }

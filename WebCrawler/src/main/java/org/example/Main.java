@@ -1,6 +1,7 @@
 package org.example;
 
-import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Scanner;
 
 public class Main {
@@ -29,12 +30,21 @@ public class Main {
         return depth;
     }
 
-    public static void crawlWithUserInput(String url, int depth, String domain) {
-        Crawler crawler = new Crawler(url, depth, domain);
+    public static boolean isValidURL(String urlString) {
         try {
+            new URL(urlString);
+            return true;
+        } catch (MalformedURLException e) {
+            return false;
+        }
+    }
+
+    public static void crawlWithUserInput(String url, int depth, String domain) {
+        if (isValidURL(url)) {
+            Crawler crawler = new Crawler(url, depth, domain);
             crawler.startCrawling();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } else {
+            System.out.println("Invalid URL.");
         }
     }
 }
