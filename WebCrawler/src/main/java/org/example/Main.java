@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        int depth = 0;
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter URL to crawl (entire URL, with http://..): ");
@@ -17,12 +16,25 @@ public class Main {
 
         scanner.close();
 
+        crawlWithUserInput(url, processDepthInput(depthInput), domain);
+    }
+
+    public static int processDepthInput(String depthInput) {
+        int depth = 0;
         try {
             depth = Integer.parseInt(depthInput);
-            Crawler crawler = new Crawler(url, depth, domain);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return depth;
+    }
+
+    public static void crawlWithUserInput(String url, int depth, String domain) {
+        Crawler crawler = new Crawler(url, depth, domain);
+        try {
             crawler.startCrawling();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }
