@@ -3,6 +3,12 @@ Web-Crawler
 
 This project is a Java application built using Maven that allows you to crawl a specified URL within a given domain up to a defined depth. This README provides instructions on how to build, run, and test the crawler using IntelliJ IDEA.
 
+Build the Application
+To build the application you need to:
+
+-> Clone the GitHub repository
+-> Open IntelliJ and import the project
+
 Running the Application
 To run the application from within IntelliJ:
 
@@ -17,5 +23,5 @@ To run the application from within IntelliJ:
 Testing the Application
 To run the automated tests:
 
-Right-click on the src/test/java directory in the Project view.
-Select Run 'Tests in 'java''.
+-> Right-click on the src/test/java directory in the Project view.
+-> Select Run 'Tests in 'java''.
