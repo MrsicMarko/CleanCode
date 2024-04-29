@@ -58,8 +58,8 @@ public class Crawler {
     }
 
     private void crawlFurtherLinks(Document document, String indent, int depth) {
-        Elements links = document.select("a[href]");
-        for (Element link : links) {
+        Elements crawledLinks = document.select("a[href]");
+        for (Element link : crawledLinks) {
             String nextUrl = link.absUrl("href");
             if (!nextUrl.isEmpty()) {
                 crawl(depth + 1, nextUrl, "--" + indent);
