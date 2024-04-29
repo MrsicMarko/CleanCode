@@ -9,15 +9,15 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter URL to crawl (entire URL, with http://..): ");
-        String url = scanner.nextLine();
+        String urlInput = scanner.nextLine();
         System.out.print("Enter depth of crawling: ");
         String depthInput = scanner.nextLine();
         System.out.print("Enter domain to allow crawling: ");
-        String domain = scanner.nextLine();
+        String domainInput = scanner.nextLine();
 
         scanner.close();
 
-        crawlWithUserInput(url, processDepthInput(depthInput), domain);
+        crawlWithUserInput(urlInput, processDepthInput(depthInput), domainInput);
     }
 
     public static int processDepthInput(String depthInput) {
