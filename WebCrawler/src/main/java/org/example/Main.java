@@ -3,6 +3,7 @@ package org.example;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,7 +13,7 @@ public class Main {
 
 
         System.out.print("Enter URLs to crawl (separated by comma): ");
-        String urlInput = scanner.nextLine();
+        String urlInputList = scanner.nextLine();
         System.out.print("Enter depth of crawling: ");
         String depthInput = scanner.nextLine();
         System.out.print("Enter domain to allow crawling: ");
@@ -20,34 +21,40 @@ public class Main {
 
         scanner.close();
 
-        //crawlWithUserInput(processUrlInput(urlInput), processDepthInput(depthInput), domainInput);
-        /*
-        * if (urlInput.isEmpty()) {
-            System.out.println("No URLs provided. Exiting...");
+
+        int depth = processDepthInput(depthInput);
+        List<String> urlList = processUrlInput(urlInputList);
+        
+        if (depth < 0 || urlList == null) {
             return;
         }
-        * */
-        crawlWithUserInput(urlInput, processDepthInput(depthInput), domainInput);
+
+        crawlWithUserInput("urlInput", processDepthInput(depthInput), domainInput);
     }
 
     public static int processDepthInput(String depthInput) {
-        int depth = 0;
+        int depth;
         try {
             depth = Integer.parseInt(depthInput);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid Input -> Exiting with Error: " + e.getMessage());
+            return -1;
         }
         return depth;
     }
 
     public static List<String> processUrlInput(String urlInput) {
-        List<String> urlInputList = new ArrayList<>();
+        List<String> urls = new ArrayList<>();
         String[] urlArray = urlInput.split(",");
         for (String url : urlArray) {
-            urlInputList.add(url.trim());
+            urls.add(url.trim());
+        }
+        if (urls.isEmpty()) {
+            System.out.println("No URLs provided. Exiting...");
+            return null;
         }
 
-        return urlInputList;
+        return urls;
     }
 
     public static boolean isValidURL(String urlString) {
