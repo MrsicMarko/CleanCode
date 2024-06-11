@@ -2,13 +2,16 @@ package org.example;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter URL to crawl (entire URL, with http://..): ");
+
+        System.out.print("Enter URLs to crawl (separated by comma): ");
         String urlInput = scanner.nextLine();
         System.out.print("Enter depth of crawling: ");
         String depthInput = scanner.nextLine();
@@ -17,6 +20,13 @@ public class Main {
 
         scanner.close();
 
+        //crawlWithUserInput(processUrlInput(urlInput), processDepthInput(depthInput), domainInput);
+        /*
+        * if (urlInput.isEmpty()) {
+            System.out.println("No URLs provided. Exiting...");
+            return;
+        }
+        * */
         crawlWithUserInput(urlInput, processDepthInput(depthInput), domainInput);
     }
 
@@ -28,6 +38,16 @@ public class Main {
             e.printStackTrace();
         }
         return depth;
+    }
+
+    public static List<String> processUrlInput(String urlInput) {
+        List<String> urlInputList = new ArrayList<>();
+        String[] urlArray = urlInput.split(",");
+        for (String url : urlArray) {
+            urlInputList.add(url.trim());
+        }
+
+        return urlInputList;
     }
 
     public static boolean isValidURL(String urlString) {
